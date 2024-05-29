@@ -1,27 +1,55 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import css from './contacts.module.css';
+// src/components/Contacts/Contacts.jsx
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchContacts, addContact, deleteContact } from '../../redux/contacts/contactsOperations';
 
-export const Contacts = ({ contacts, onDeleteContact }) => (
-  <ul className={css.contacts}>
-    {contacts.map(({ id, name, number }) => (
-      <li key={id} className={css.item}>
-        {name}: {number}
-        <button className={css.btn} onClick={() => onDeleteContact(id)}>
-          Delete
-        </button>
-      </li>
-    ))}
-  </ul>
-);
+const Contacts = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.items);
+  const [newContact, setNewContact] = useState({ name: '', phone: '' });
 
-Contacts.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  const handleAddContact = (event) => {
+    event.preventDefault();
+    dispatch(addContact(newContact));
+    setNewContact({ name: '', phone: '' });
+  };
+
+  const handleDeleteContact = (contactId) => {
+    dispatch(deleteContact(contactId));
+  };
+
+  return (
+    <div>
+      <h1>Contacts</h1>
+      <ul>
+        {contacts.map(contact => (
+          <li key={contact.id}>
+            {contact.name}: {contact.phone}
+            <button onClick={() => handleDeleteContact(contact.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+      <form onSubmit={handleAddContact}>
+        <input
+          type="text"
+          placeholder="Name"
+          value={newContact.name}
+          onChange={(e) => setNewContact({ ...newContact, name: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Phone"
+          value={newContact.phone}
+          onChange={(e) => setNewContact({ ...newContact, phone: e.target.value })}
+        />
+        <button type="submit">Add Contact</button>
+      </form>
+    </div>
+  );
 };
+
+export default Contacts;
