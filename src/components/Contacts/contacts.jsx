@@ -1,54 +1,43 @@
-// src/components/Contacts/Contacts.jsx
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchContacts, addContact, deleteContact } from '../../redux/contacts/contactsOperations';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../../redux/contacts/contactsOperations';
+import { Flex, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
 
 const Contacts = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.items);
-  const [newContact, setNewContact] = useState({ name: '', phone: '' });
+  const [formData, setFormData] = useState({
+    name: '',
+    number: ''
+  });
 
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
-
-  const handleAddContact = (event) => {
-    event.preventDefault();
-    dispatch(addContact(newContact));
-    setNewContact({ name: '', phone: '' });
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
-  const handleDeleteContact = (contactId) => {
-    dispatch(deleteContact(contactId));
+  const handleSubmit = e => {
+    e.preventDefault();
+    dispatch(addContact(formData));
+    setFormData({ name: '', number: '' });
   };
 
   return (
-    <div>
-      <h1>Contacts</h1>
-      <ul>
-        {contacts.map(contact => (
-          <li key={contact.id}>
-            {contact.name}: {contact.phone}
-            <button onClick={() => handleDeleteContact(contact.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-      <form onSubmit={handleAddContact}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={newContact.name}
-          onChange={(e) => setNewContact({ ...newContact, name: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Phone"
-          value={newContact.phone}
-          onChange={(e) => setNewContact({ ...newContact, phone: e.target.value })}
-        />
-        <button type="submit">Add Contact</button>
+    <Flex justifyContent="center" alignItems="center" height="80vh">
+      <form onSubmit={handleSubmit}>
+        <FormControl mb={4}>
+          <FormLabel>Name</FormLabel>
+          <Input type="text" name="name" value={formData.name} onChange={handleChange} />
+        </FormControl>
+        <FormControl mb={4}>
+          <FormLabel>Number</FormLabel>
+          <Input type="text" name="number" value={formData.number} onChange={handleChange} />
+        </FormControl>
+        <Button type="submit" colorScheme="teal">Add Contact</Button>
       </form>
-    </div>
+    </Flex>
   );
 };
 

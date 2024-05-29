@@ -1,30 +1,42 @@
-// src/pages/Login/Login.js
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/auth/authOperations';
-import { useState } from 'react';
+import { Flex, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
 
-  const handleSubmit = (e) => {
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = e => {
     e.preventDefault();
-    dispatch(login({ email, password }));
+    dispatch(login(formData));
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Email
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      </label>
-      <label>
-        Password
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </label>
-      <button type="submit">Login</button>
-    </form>
+    <Flex justifyContent="center" alignItems="center" height="80vh">
+      <form onSubmit={handleSubmit}>
+        <FormControl mb={4}>
+          <FormLabel>Email</FormLabel>
+          <Input type="email" name="email" value={formData.email} onChange={handleChange} />
+        </FormControl>
+        <FormControl mb={4}>
+          <FormLabel>Password</FormLabel>
+          <Input type="password" name="password" value={formData.password} onChange={handleChange} />
+        </FormControl>
+        <Button type="submit" colorScheme="teal">Login</Button>
+      </form>
+    </Flex>
   );
 };
 
