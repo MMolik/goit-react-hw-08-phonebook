@@ -1,38 +1,33 @@
-// App.jsx
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Navigation from './Navigation/Navigation';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { selectUser } from '../redux/auth/authSlice';
 import Register from '../pages/Register/Register';
 import Login from '../pages/Login/Login';
 import ContactsPage from '../pages/ContactsPage/ContactsPage';
-import { fetchContacts } from '../redux/contacts/contactsOperations'; 
-import { ChakraProvider } from "@chakra-ui/react"; 
+import { logout } from '../redux/auth/authOperations';
+import Navigation from '../components/Navigation/Navigation';
 
-function App() {
+const App = () => {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+  const user = useSelector(selectUser);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(fetchContacts());
-    }
-  }, [dispatch, isLoggedIn]);
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
-    <ChakraProvider>
-      <Router>
-        <div className="App">
-          <Navigation /> {/* Renderujemy nawigację */}
-          <Routes>
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/contacts" element={<ContactsPage />} />
-          </Routes>
-        </div>
-      </Router>
-    </ChakraProvider>
+    <Router>
+      <div>
+        <Navigation />
+        <Routes>
+          <Route path="/register" element={!user ? <Register /> : <Navigate to="/contacts" />} />
+          <Route path="/login" element={!user ? <Login /> : <Navigate to="/contacts" />} />
+          <Route path="/contacts" element={user ? <ContactsPage /> : <Navigate to="/login" />} />
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;

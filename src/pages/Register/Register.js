@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { register } from '../../redux/auth/authOperations';
-import { Flex, FormControl, FormLabel, Input, Button } from "@chakra-ui/react"; // Dodajemy importy komponentów z Chakra UI
+import { selectIsLoading, selectError } from '../../redux/auth/authSlice';
+import { Flex, FormControl, FormLabel, Input, Button, Text } from "@chakra-ui/react";
 
 const Register = () => {
   const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -25,7 +28,7 @@ const Register = () => {
   };
 
   return (
-    <Flex justifyContent="center" alignItems="center" height="80vh">
+    <Flex flexDirection="column" alignItems="center">
       <form onSubmit={handleSubmit}>
         <FormControl mb={4}>
           <FormLabel>Name</FormLabel>
@@ -39,8 +42,9 @@ const Register = () => {
           <FormLabel>Password</FormLabel>
           <Input type="password" name="password" value={formData.password} onChange={handleChange} />
         </FormControl>
-        <Button type="submit" colorScheme="teal">Register</Button>
+        <Button type="submit" colorScheme="teal" isLoading={isLoading}>Register</Button>
       </form>
+      {error && <Text color="red.500" mt={4}>{error}</Text>}
     </Flex>
   );
 };
