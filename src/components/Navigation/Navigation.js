@@ -1,45 +1,63 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button, Flex } from "@chakra-ui/react";
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUser } from '../../redux/auth/authSlice';
+import { logout } from '../../redux/auth/authOperations';
 
-const Navigation = () => (
-  <Flex justifyContent="center" width="100%" py={4} bg="gray.200"> {/* Używamy Flex do rozmieszczenia przycisków na całej szerokości strony */}
-    <NavLink to="/register">
-      <Button
-        as="button"
-        variant="solid"
-        size="lg"
-        _hover={{ bg: "teal.500" }} /* Zmieniamy kolor tła po najechaniu myszką */
-        mr={4}
-        colorScheme="blue" /* Ustawiamy schemat kolorów przycisku */
-      >
-        Register
-      </Button>
-    </NavLink>
-    <NavLink to="/login">
-      <Button
-        as="button"
-        variant="solid"
-        size="lg"
-        _hover={{ bg: "teal.500" }} /* Zmieniamy kolor tła po najechaniu myszką */
-        mr={4}
-        colorScheme="green" /* Ustawiamy schemat kolorów przycisku */
-      >
-        Login
-      </Button>
-    </NavLink>
-    <NavLink to="/contacts">
-      <Button
-        as="button"
-        variant="solid"
-        size="lg"
-        _hover={{ bg: "teal.500" }} /* Zmieniamy kolor tła po najechaniu myszką */
-        colorScheme="orange" /* Ustawiamy schemat kolorów przycisku */
-      >
-        Contacts
-      </Button>
-    </NavLink>
-  </Flex>
-);
+const Navigation = () => {
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+  return (
+    <Flex justifyContent="center" width="100%" py={4} bg="gray.200">
+      {!user ? (
+        <>
+          <NavLink to="/register">
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              mr={4}
+            >
+              Register
+            </Button>
+          </NavLink>
+          <NavLink to="/login">
+            <Button
+              variant="solid"
+              colorScheme="green"
+              mr={4}
+            >
+              Login
+            </Button>
+          </NavLink>
+        </>
+      ) : (
+        <>
+          <NavLink to="/contacts">
+            <Button
+              variant="solid"
+              colorScheme="orange"
+              mr={4}
+            >
+              Contacts
+            </Button>
+          </NavLink>
+          <Button
+            variant="solid"
+            colorScheme="red"
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        </>
+      )}
+    </Flex>
+  );
+};
 
 export default Navigation;

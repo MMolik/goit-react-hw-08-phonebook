@@ -1,46 +1,27 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../redux/auth/authOperations';
-import { selectIsLoading, selectError } from '../../redux/auth/authSlice';
-import { Flex, FormControl, FormLabel, Input, Button, Text } from "@chakra-ui/react";
+import React from 'react';
+import { Box, Heading, FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const isLoading = useSelector(selectIsLoading);
-  const error = useSelector(selectError);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(login(formData));
+    // Tutaj możesz dodać logikę obsługi formularza logowania
   };
 
   return (
-    <Flex flexDirection="column" alignItems="center">
+    <Box maxW="400px" m="auto" mt={8} p={4} borderWidth="1px" borderRadius="lg" bg="gray.100" boxShadow="lg">
+      <Heading as="h2" size="lg" mb={4} textAlign="center" color="purple.500">Login</Heading>
       <form onSubmit={handleSubmit}>
-        <FormControl mb={4}>
-          <FormLabel>Email</FormLabel>
-          <Input type="email" name="email" value={formData.email} onChange={handleChange} />
+        <FormControl id="email" mb={4}>
+          <FormLabel>Email address</FormLabel>
+          <Input type="email" placeholder="Enter email" />
         </FormControl>
-        <FormControl mb={4}>
+        <FormControl id="password" mb={4}>
           <FormLabel>Password</FormLabel>
-          <Input type="password" name="password" value={formData.password} onChange={handleChange} />
+          <Input type="password" placeholder="Enter password" />
         </FormControl>
-        <Button type="submit" colorScheme="teal" isLoading={isLoading}>Login</Button>
+        <Button type="submit" colorScheme="purple" size="md" w="100%">Login</Button>
       </form>
-      {error && <Text color="red.500" mt={4}>{error}</Text>}
-    </Flex>
+    </Box>
   );
 };
 

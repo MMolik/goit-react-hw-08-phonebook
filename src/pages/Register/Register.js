@@ -9,9 +9,9 @@ const Register = () => {
   const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: ''
+    name: '', // Dodane pole name
+    email: '', 
+    password: '' 
   });
 
   const handleChange = e => {
@@ -31,16 +31,16 @@ const Register = () => {
     <Flex flexDirection="column" alignItems="center">
       <form onSubmit={handleSubmit}>
         <FormControl mb={4}>
-          <FormLabel>Name</FormLabel>
-          <Input type="text" name="name" value={formData.name} onChange={handleChange} />
+          <FormLabel>Name</FormLabel> {/* Dodane pole name z odpowiednim label */}
+          <Input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter name" /> {/* Placeholder dla pola name */}
         </FormControl>
         <FormControl mb={4}>
           <FormLabel>Email</FormLabel>
-          <Input type="email" name="email" value={formData.email} onChange={handleChange} />
+          <Input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter email" />
         </FormControl>
         <FormControl mb={4}>
           <FormLabel>Password</FormLabel>
-          <Input type="password" name="password" value={formData.password} onChange={handleChange} />
+          <Input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter password" />
         </FormControl>
         <Button type="submit" colorScheme="teal" isLoading={isLoading}>Register</Button>
       </form>
