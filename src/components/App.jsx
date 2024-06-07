@@ -19,7 +19,7 @@ const App = () => {
   return (
     <Router>
       <div>
-        <Navigation />
+        <Navigation handleLogout={handleLogout} />
         <Routes>
           <Route path="/register" element={!user ? <Register /> : <Navigate to="/contacts" />} />
           <Route path="/login" element={!user ? <Login /> : <Navigate to="/contacts" />} />
