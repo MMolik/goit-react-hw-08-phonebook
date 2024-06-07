@@ -51,7 +51,7 @@ export const logout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await axios.post('https://connections-api.herokuapp.com/users/logout');
-      localStorage.removeItem('token'); // Usuń token z localStorage
+      localStorage.removeItem('token'); 
     } catch (error) {
       if (error.response && error.response.data) {
         return rejectWithValue(error.response.data);
